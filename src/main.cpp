@@ -35,11 +35,13 @@ void push_handler(ButtonEvent *btn, int event)
 
 void setup()
 {
+  HAL::Init();
   strip_init();
-  HWSerial.begin(115200);
+  //HWSerial.begin(115200);
   display_init();
-  ui_init();
-  knob_init(push_handler);
+  //ui_init();
+  //knob_init(push_handler);
+  App_Init();
   INIT_DONE();
 }
 
@@ -48,6 +50,6 @@ void loop()
   unsigned long currentMillis = millis();
   strip_start(currentMillis);
 
-  knob_update();
+  HAL::Update();
   delay(10);
 }

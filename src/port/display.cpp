@@ -2,7 +2,6 @@
 #include "config.h"
 
 TaskHandle_t handleTaskLvgl;
-
 void TaskLvglUpdate(void* parameter)
 {
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -10,7 +9,7 @@ void TaskLvglUpdate(void* parameter)
     for (;;)
     {
         lv_task_handler();
-        
+
         delay(5);
     }
 }
@@ -37,4 +36,5 @@ void display_init(void)
         nullptr,
         configMAX_PRIORITIES - 1,
         &handleTaskLvgl);
+
 }
