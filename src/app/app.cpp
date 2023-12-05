@@ -38,7 +38,7 @@ void App_Init()
     // /*----------------------- Pages Init -----------------------*/
     StatusBar::Init(lv_layer_top());
 
-    // manager.Install("Template", "Pages/Template");
+    manager.Install("Template", "Pages/Template");
     // manager.Install("SystemInfos", "Pages/SystemInfos");
     manager.Install("Startup", "Pages/Startup");
     // manager.Install("Startup", "Pages/Startup");
@@ -50,10 +50,7 @@ void App_Init()
     // ACCOUNT_SEND_NOTIFY_CMD(Storage, STORAGE_CMD_LOAD);
     // ACCOUNT_SEND_NOTIFY_CMD(SysConfig, SYSCONFIG_CMD_LOAD);
 
-    // INIT_DONE();
-
-    // Page::Startup_view startup;
-    // startup.Create(NULL);
+    INIT_DONE();
 }
 
 void App_UnInit()

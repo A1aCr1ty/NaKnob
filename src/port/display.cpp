@@ -1,8 +1,9 @@
 #include "display.h"
 #include "config.h"
+#include "hal/hal.h"
 
 TaskHandle_t handleTaskLvgl;
-void TaskLvglUpdate(void* parameter)
+void TaskLvglUpdate(void *parameter)
 {
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
     for (;;)
@@ -19,7 +20,7 @@ void display_init(void)
     static SCREEN_CLASS screen(bus, TFT_RST, 0 /* 屏幕方向 */, true /* IPS */);
     // Init Display
     screen.begin();
-    screen.fillScreen(BLUE);
+    screen.fillScreen(BLACK);
 #ifdef TFT_BLK
     pinMode(TFT_BLK, OUTPUT);
     digitalWrite(TFT_BLK, HIGH);
@@ -35,5 +36,4 @@ void display_init(void)
         nullptr,
         configMAX_PRIORITIES - 1,
         &handleTaskLvgl);
-
 }
