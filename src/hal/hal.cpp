@@ -14,12 +14,14 @@ void HAL::Init()
     disp_draw_buf = static_cast<lv_color_t*>(malloc(DISP_BUF_SIZE * sizeof(lv_color_t)));
     if (disp_draw_buf == nullptr)
         LV_LOG_WARN("lv_port_disp_init malloc failed!\n");
-    
+
+    motor_init();
     knob_init(push_handler);
 }
 
 
 void HAL::Update()
 {
-    HAL::knob_update();
+    __IntervalExecute(HAL::knob_update(), 10);
+    HAL::motor_update();
 }

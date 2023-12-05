@@ -51,5 +51,4 @@ void loop()
   strip_start(currentMillis);
 
   HAL::Update();
-  delay(10);
 }

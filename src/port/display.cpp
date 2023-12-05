@@ -5,7 +5,6 @@ TaskHandle_t handleTaskLvgl;
 void TaskLvglUpdate(void* parameter)
 {
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    Serial.println("Hello from task 1");
     for (;;)
     {
         lv_task_handler();
