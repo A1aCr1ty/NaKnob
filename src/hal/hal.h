@@ -11,11 +11,13 @@ namespace HAL
     void Init();
     void Update();
 
-    void knob_init(void (*button_handler)(ButtonEvent* btn, int event));
+    void knob_init();
     void knob_update(void);
+    bool encoder_is_pushed();
     void motor_init(void);
     void motor_update(void);
+    int get_motor_position(void);
+    void update_motor_config(int status);
 }
-
 
 #endif

@@ -10,9 +10,12 @@ void StartupView::Create(lv_obj_t *root)
     lv_obj_remove_style_all(root);
     lv_obj_set_size(root, LV_HOR_RES, LV_VER_RES);
 
+    // 设置开头动画内容
     lv_obj_t *cont = lv_obj_create(root);
     lv_obj_remove_style_all(cont);
+    // 设置内容大小
     lv_obj_set_size(cont, 120, 40);
+    // 设置内容的样式
     lv_obj_set_style_border_color(cont, COLOR_ORANGE, 0);
     lv_obj_set_style_border_side(cont, LV_BORDER_SIDE_BOTTOM, 0);
     lv_obj_set_style_border_width(cont, 3, 0);
