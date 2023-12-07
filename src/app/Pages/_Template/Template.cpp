@@ -9,7 +9,6 @@ Template::Template()
 
 Template::~Template()
 {
-
 }
 
 void Template::onCustomAttrConfig()
@@ -26,12 +25,11 @@ void Template::onViewLoad()
 	AttachEvent(root);
 	AttachEvent(View.ui.canvas);
 
-	//Model.TickSave = Model.GetData();
+	Model.TickSave = Model.GetData();
 }
 
 void Template::onViewDidLoad()
 {
-
 }
 
 void Template::onViewWillAppear()
@@ -44,17 +42,15 @@ void Template::onViewWillAppear()
 
 	lv_obj_set_style_bg_color(root, param.color, LV_PART_MAIN);
 
-	//timer = lv_timer_create(onTimerUpdate, param.time, this);
+	timer = lv_timer_create(onTimerUpdate, param.time, this);
 }
 
 void Template::onViewDidAppear()
 {
-
 }
 
 void Template::onViewWillDisappear()
 {
-
 }
 
 void Template::onViewDidDisappear()
@@ -64,10 +60,9 @@ void Template::onViewDidDisappear()
 
 void Template::onViewDidUnload()
 {
-
 }
 
-void Template::AttachEvent(lv_obj_t* obj)
+void Template::AttachEvent(lv_obj_t *obj)
 {
 	lv_obj_set_user_data(obj, this);
 	lv_obj_add_event_cb(obj, onEvent, LV_EVENT_ALL, this);
@@ -78,18 +73,18 @@ void Template::Update()
 	lv_label_set_text_fmt(View.ui.labelTick, "tick = %d save = %d", Model.GetData(), Model.TickSave);
 }
 
-void Template::onTimerUpdate(lv_timer_t* timer)
+void Template::onTimerUpdate(lv_timer_t *timer)
 {
-	Template* instance = (Template*)timer->user_data;
+	Template *instance = (Template *)timer->user_data;
 
 	instance->Update();
 }
 
-void Template::onEvent(lv_event_t* event)
+void Template::onEvent(lv_event_t *event)
 {
-	lv_obj_t* obj = lv_event_get_target(event);
+	lv_obj_t *obj = lv_event_get_target(event);
 	lv_event_code_t code = lv_event_get_code(event);
-	auto* instance = (Template*)lv_obj_get_user_data(obj);
+	auto *instance = (Template *)lv_obj_get_user_data(obj);
 
 	if (code == LV_EVENT_PRESSED)
 	{

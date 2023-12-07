@@ -29,11 +29,12 @@ void display_init(void)
     lv_port_disp_init(&screen);
     lv_port_indev_init();
     // Update display in parallel thread.
-    xTaskCreate(
+    xTaskCreatePinnedToCore(
         TaskLvglUpdate,
         "LvglThread",
         20000,
         nullptr,
         configMAX_PRIORITIES - 1,
-        &handleTaskLvgl);
+        &handleTaskLvgl,
+        LVGL_RUNNING_CORE);
 }
