@@ -11,22 +11,9 @@ extern int rgb_flag;
 
 bool HAL::encoder_is_pushed(void)
 {
-    static int press_cnt = 0;
-    bool is_pushed = false;
     if (digitalRead(PUSH_BUTTON_PIN) == LOW)
     {
-        press_cnt++;
-        if (press_cnt > 3)
-        {
-            if (digitalRead(PUSH_BUTTON_PIN) == LOW)
-            {
-                return true;
-            }
-        }
-    }
-    else
-    {
-        press_cnt = 0;
+        return true;
     }
     return false;
 }

@@ -13,13 +13,13 @@ namespace HAL
 
     void knob_init();
     void knob_update(void);
-    bool encoder_is_pushed();
-    void motor_init(void);
-    void TaskMotorUpdate(void *pvParameters);
+    bool encoder_is_pushed(void);
 
+    void motor_init(void);
+    // void TaskMotorUpdate(void *pvParameters);
     int get_motor_position(void);
     void update_motor_mode(int mode);
-    void motor_shake(int strength,int delay_time);
+    void motor_shake(int strength, int delay_time);
 
 }
 
