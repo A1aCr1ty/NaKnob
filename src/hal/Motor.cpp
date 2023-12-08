@@ -5,8 +5,9 @@
 
 static const int spiClk = 1000000; // 400KHz
 SPIClass *hspi = NULL;
-
+// 无刷电机实例
 BLDCMotor motor = BLDCMotor(7);
+// 无刷电机驱动器
 BLDCDriver3PWM driver = BLDCDriver3PWM(MO1, MO2, MO3);
 // 目标变量
 float target_velocity = 0;
@@ -102,6 +103,12 @@ float idle_check_velocity_ewma = 0;
 
 //  ------------monitor--------------------
 Commander commander = Commander(Serial, '\n', false);
+
+// 无刷直流电动机 (BLDCMotor) - commander.motor(&motor, cmd)
+// 步进电机 (StepperMotor) - commander.motor(&motor, cmd)
+// PID控制器(PIDController) - commander.pid(&pid, cmd)
+// 低通滤波器 (LowPassFilter) - commander.lpf(&lpf, cmd)
+// 任何数值变量(float) - commander.scalar(&variable, cmd)
 void onPid(char *cmd) { commander.pid(&motor.PID_velocity, cmd); }
 void onMotor(char *cmd) { commander.motor(&motor, cmd); }
 // -------------monitor--------------------
