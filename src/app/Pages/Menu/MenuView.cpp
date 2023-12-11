@@ -37,22 +37,22 @@ void MenuView::Create(lv_obj_t *root)
     Item_Create(
         &ui.switches,
         root,
-        "switch",
+        "play",
         "switches",
 
-        "X\n"
-        "Y\n"
-        "Z\n"
-        "A\n"
-        "B\n"
-        "C\n");
+        "Playground\n"
+        "Unbounded No detents\n"
+        "On/off\n"
+        "Return-to-center\n"
+        "Fine values\n"
+        "Coarse values\n");
 
     // /* Item System */
     Item_Create(
         &ui.system,
         root,
-        "System", //name
-        "system_info", //img_src
+        "System",      // name
+        "system_info", // img_src
 
         "Firmware\n"
         "Author\n"

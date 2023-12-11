@@ -42,6 +42,7 @@ void App_Init()
     manager.Install("Menu", "Pages/Menu");
     //  manager.Install("SystemInfos", "Pages/SystemInfos");
     manager.Install("Startup", "Pages/Startup");
+    manager.Install("Playground", "Pages/Playground");
     // manager.Install("Startup", "Pages/Startup");
     //  manager.Install("Scene3D", "Pages/Scene3D");
 
