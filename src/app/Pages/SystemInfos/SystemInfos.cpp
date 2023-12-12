@@ -9,12 +9,10 @@ SystemInfos::SystemInfos()
 
 SystemInfos::~SystemInfos()
 {
-
 }
 
 void SystemInfos::onCustomAttrConfig()
 {
-
 }
 
 void SystemInfos::onViewLoad()
@@ -32,13 +30,12 @@ void SystemInfos::onViewLoad()
 
 void SystemInfos::onViewDidLoad()
 {
-
 }
 
 void SystemInfos::onViewWillAppear()
 {
 	lv_indev_set_group(lv_get_indev(LV_INDEV_TYPE_ENCODER), View.ui.group);
-	StatusBar::SetStyle(StatusBar::STYLE_BLACK);
+	// StatusBar::SetStyle(StatusBar::STYLE_BLACK);
 
 	timer = lv_timer_create(onTimerUpdate, 100, this);
 	lv_timer_ready(timer);
@@ -68,7 +65,7 @@ void SystemInfos::onViewDidUnload()
 	Model.Deinit();
 }
 
-void SystemInfos::AttachEvent(lv_obj_t* obj)
+void SystemInfos::AttachEvent(lv_obj_t *obj)
 {
 	lv_obj_set_user_data(obj, this);
 	lv_obj_add_event_cb(obj, onEvent, LV_EVENT_PRESSED, this);
@@ -102,8 +99,7 @@ void SystemInfos::Update()
 	View.SetStorage(
 		detect ? "YES" : "NO",
 		buf,
-		VERSION_FILESYSTEM
-	);
+		VERSION_FILESYSTEM);
 
 	/* System */
 	View.SetSystem(
@@ -112,22 +108,21 @@ void SystemInfos::Update()
 		VERSION_LVGL,
 		"dummy time",
 		VERSION_COMPILER,
-		VERSION_BUILD_TIME
-	);
+		VERSION_BUILD_TIME);
 }
 
-void SystemInfos::onTimerUpdate(lv_timer_t* timer)
+void SystemInfos::onTimerUpdate(lv_timer_t *timer)
 {
-	SystemInfos* instance = (SystemInfos*)timer->user_data;
+	SystemInfos *instance = (SystemInfos *)timer->user_data;
 
 	instance->Update();
 }
 
-void SystemInfos::onEvent(lv_event_t* event)
+void SystemInfos::onEvent(lv_event_t *event)
 {
-	lv_obj_t* obj = lv_event_get_target(event);
+	lv_obj_t *obj = lv_event_get_target(event);
 	lv_event_code_t code = lv_event_get_code(event);
-	auto* instance = (SystemInfos*)lv_obj_get_user_data(obj);
+	auto *instance = (SystemInfos *)lv_obj_get_user_data(obj);
 
 	if (code == LV_EVENT_PRESSED)
 	{
@@ -136,6 +131,4 @@ void SystemInfos::onEvent(lv_event_t* event)
 			instance->Manager->Push("Pages/Scene3D");
 		}
 	}
-
- 
 }

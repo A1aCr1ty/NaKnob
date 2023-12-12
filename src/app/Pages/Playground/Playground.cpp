@@ -89,7 +89,6 @@ void Playground::onEvent(lv_event_t *event)
 
 	if (code == LV_EVENT_PRESSED)
 	{
-
 		instance->Manager->Push("Pages/Menu");
 	}
 }

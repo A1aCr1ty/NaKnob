@@ -50,7 +50,7 @@ void Startup::onViewWillDisappear()
 
 void Startup::onViewDidDisappear()
 {
-    StatusBar::Appear(true);
+    //StatusBar::Appear(true);
 }
 
 void Startup::onViewDidUnload()

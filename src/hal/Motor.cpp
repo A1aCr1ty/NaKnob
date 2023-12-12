@@ -169,7 +169,11 @@ int HAL::get_motor_position(void)
 void HAL::update_motor_mode(int mode)
 {
     motor_config = x_knob_configs[mode];
+#if XK_INVERT_ROTATION
+    current_detent_center = -motor.shaft_angle;
+#else
     current_detent_center = motor.shaft_angle;
+#endif
 }
 
 void motor_status_publish()
@@ -188,7 +192,11 @@ TaskHandle_t handleTaskMotor;
 void TaskMotorUpdate(void *pvParameters)
 {
     // ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+#if XK_INVERT_ROTATION
+    current_detent_center = -motor.shaft_angle;
+#else
     current_detent_center = motor.shaft_angle;
+#endif
     while (1)
     {
         sensor.update();
@@ -216,7 +224,11 @@ void TaskMotorUpdate(void *pvParameters)
         }
 
         // 到控制中心的角度 差值
+#if XK_INVERT_ROTATION
+        float angle_to_detent_center = -motor.shaft_angle - current_detent_center;
+#else
         float angle_to_detent_center = motor.shaft_angle - current_detent_center;
+#endif
         // 每一步都乘以了 snap_point 的值
         if (angle_to_detent_center > motor_config.position_width_radians * motor_config.snap_point && (motor_config.num_positions <= 0 || motor_config.position > 0))
         {
@@ -259,6 +271,9 @@ void TaskMotorUpdate(void *pvParameters)
         {
             // 运算符重载，输入偏差计算 PID 输出值
             float torque = motor.PID_velocity(-angle_to_detent_center + dead_zone_adjustment);
+#if XK_INVERT_ROTATION
+            torque = -torque;
+#endif
             motor.move(torque);
         }
         motor.monitor();
