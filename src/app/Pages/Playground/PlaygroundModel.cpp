@@ -1,5 +1,6 @@
 #include "PlaygroundModel.h"
 #include "App/Accounts/Account_Master.h"
+#include "hal/motor.h"
 #include <Arduino.h>
 using namespace Page;
 
@@ -8,25 +9,66 @@ static int now_pos = 0;
 static int last_pos = 0;
 static int32_t MAX_VALUE = 100;
 static int32_t MIN_VALUE = 0;
+static bool is_outbound = false;
+static int32_t arc_offset = 0; // 超过界限以后，显示arch长度
 
-void PlaygroundModel::GetKnobStatus(int32_t *value, int32_t *motor_position)
+void PlaygroundModel::GetKnobStatus(PlaygroundMotorInfo *info)
 {
-    *value = knob_value;
-    *motor_position = now_pos;
+    info->xkonb_value = knob_value;
+    info->motor_pos = now_pos;
+    info->angle_offset = arc_offset;
 }
 
+void PlaygroundModel::SetPlaygroundMode(int16_t mode)
+{
+    playgroundMode = mode;
+    switch (playgroundMode)
+    {
+    case PLAYGROUND_MODE_UNBOUND:
+        // This mode is default
+        MAX_VALUE = 100;
+        MIN_VALUE = 0;
+
+        break;
+    case PLAYGROUND_MODE_BOUND:
+        MAX_VALUE = 12;
+        MIN_VALUE = 0;
+        knob_value = 0;
+        break;
+    default:
+        break;
+    }
+}
+
+void PlaygroundModel::ChangeMotorMode(int mode)
+{
+    // Serial.printf("MenuModel: Change Motor Mode\n");
+    AccountSystem::Motor_Info_t info;
+    info.cmd = AccountSystem::MOTOR_CMD_CHANGE_MODE;
+    info.motor_mode = mode;
+    // 第一个参数是通知发布者，即本 Account 应该 subscribe 第一个参数指向的 Account
+    account->Notify("Motor", &info, sizeof(info));
+}
 static int onEvent(Account *account, Account::EventParam_t *param)
 {
 
-    now_pos = (*((int32_t *)(param->data_p)));
-    Serial.printf("playground, now_pos:%d, last_pos: %d knob_value:%d\n", now_pos, last_pos, knob_value);
+    MotorStatusInfo *info = (MotorStatusInfo *)(param->data_p);
+
+    now_pos = info->position;
+    is_outbound = info->is_outbound;
+
+    if (is_outbound)
+    {
+        arc_offset = (int)(info->angle_offset);
+    }
+    else
+    {
+        arc_offset = 0;
+    }
     if (now_pos > last_pos)
     {
         knob_value++;
-        if (knob_value < MIN_VALUE)
-        {
-            knob_value = MIN_VALUE;
-        }
+     
         if (knob_value > MAX_VALUE)
         {
             knob_value = MAX_VALUE;
@@ -40,10 +82,7 @@ static int onEvent(Account *account, Account::EventParam_t *param)
         {
             knob_value = MIN_VALUE;
         }
-        if (knob_value > MAX_VALUE)
-        {
-            knob_value = MAX_VALUE;
-        }
+       
         last_pos = now_pos;
     }
 
@@ -57,6 +96,7 @@ void PlaygroundModel::Init()
 
     account->SetEventCallback(onEvent);
     account->Subscribe("MotorStatus");
+    account->Subscribe("Motor");
 }
 
 void PlaygroundModel::Deinit()

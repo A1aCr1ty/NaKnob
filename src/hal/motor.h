@@ -6,6 +6,13 @@
 #define init_smooth 1000 // 该值越大，初始化越慢。以防受到干扰。
 #define volt_limit 5.0000
 
+typedef struct
+{
+    bool is_outbound;
+    int32_t position;
+    float angle_offset;
+} MotorStatusInfo;
+
 struct XKnobConfig
 {
     // 可以运动的个数
@@ -14,11 +21,11 @@ struct XKnobConfig
     int32_t position;
     // 位置宽度弧度 或者是每一步的度数
     float position_width_radians;
-    // 制动强度
+    // 正常旋转制动强度
     float detent_strength_unit;
-    // end stop强度
+    // 超出界限后的制动强度
     float endstop_strength_unit;
-    // 快照点
+    // 每一步弧度的放大值
     float snap_point;
     // 描述符
     char descriptor[50];
@@ -26,11 +33,13 @@ struct XKnobConfig
 
 typedef enum
 {
-    MOTOR_INIT,
-    MOTOR_INIT_SUCCESS,
-    MOTOR_INIT_END,
-    DEV_WORK_MODE,
-    DEV_BLE_WORK,
+    MOTOR_UNBOUND_NO_DETENTS,
+    MOTOR_BOUND_0_12_NO_DETENTS,
+    MOTOR_COARSE_DETENTS,        // Coarse values\nStrong detents
+    MOTOR_FINE_DETENTS,          // Fine values\nWith detents
+    MOTOR_FINE_NO_DETENTS,       // Fine values\nNo detents
+    MOTOR_ON_OFF_STRONG_DETENTS, // "On/off\nStrong detent"
+    MOTOR_MAX_MODES,             //
 
 } MOTOR_RUNNING_MODE_E;
 
