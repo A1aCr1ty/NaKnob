@@ -2,6 +2,7 @@
 #include "App/Accounts/Account_Master.h"
 #include "hal/motor.h"
 #include <Arduino.h>
+#include "hal/hal.h"
 using namespace Page;
 
 static int32_t knob_value = 50;
@@ -10,13 +11,15 @@ static int last_pos = 0;
 static int32_t MAX_VALUE = 100;
 static int32_t MIN_VALUE = 0;
 static bool is_outbound = false;
+static int knob_direction = 0;
 static int32_t arc_offset = 0; // 超过界限以后，显示arch长度
 
 void PlaygroundModel::GetKnobStatus(PlaygroundMotorInfo *info)
 {
-    info->xkonb_value = knob_value;
+    info->xknob_value = knob_value;
     info->motor_pos = now_pos;
     info->angle_offset = arc_offset;
+    info->knob_direction = knob_direction;
 }
 
 void PlaygroundModel::SetPlaygroundMode(int16_t mode)
@@ -24,7 +27,7 @@ void PlaygroundModel::SetPlaygroundMode(int16_t mode)
     playgroundMode = mode;
     switch (playgroundMode)
     {
-    case PLAYGROUND_MODE_UNBOUND:
+    case PLAYGROUND_MODE_FINE_DETENTS:
         // This mode is default
         MAX_VALUE = 100;
         MIN_VALUE = 0;
@@ -32,6 +35,11 @@ void PlaygroundModel::SetPlaygroundMode(int16_t mode)
         break;
     case PLAYGROUND_MODE_BOUND:
         MAX_VALUE = 12;
+        MIN_VALUE = 0;
+        knob_value = 0;
+        break;
+    case PLAYGROUND_MODE_ON_OFF:
+        MAX_VALUE = 1;
         MIN_VALUE = 0;
         knob_value = 0;
         break;
@@ -68,7 +76,7 @@ static int onEvent(Account *account, Account::EventParam_t *param)
     if (now_pos > last_pos)
     {
         knob_value++;
-     
+        knob_direction = SUPER_DIAL_RIGHT;
         if (knob_value > MAX_VALUE)
         {
             knob_value = MAX_VALUE;
@@ -78,6 +86,7 @@ static int onEvent(Account *account, Account::EventParam_t *param)
     else if (now_pos < last_pos)
     {
         knob_value--;
+        knob_direction = SUPER_DIAL_LEFT;
         if (knob_value < MIN_VALUE)
         {
             knob_value = MIN_VALUE;
@@ -97,6 +106,7 @@ void PlaygroundModel::Init()
     account->SetEventCallback(onEvent);
     account->Subscribe("MotorStatus");
     account->Subscribe("Motor");
+    playgroundMode = 0;
 }
 
 void PlaygroundModel::Deinit()

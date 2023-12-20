@@ -6,9 +6,7 @@
 static volatile int16_t EncoderDiff = 0;
 
 static ButtonEvent EncoderPush(500);
-static int push_state = 0;
 extern int rgb_flag;
-
 bool HAL::encoder_is_pushed(void)
 {
     if (digitalRead(PUSH_BUTTON_PIN) == LOW)
@@ -30,21 +28,25 @@ static void Encoder_PushHandler(ButtonEvent *btn, int event)
         rgb_flag = 1;
         // HAL::Buzz_Tone(500, 20);
         // EncoderDiffDisable = true;
+        ;
     }
     else if (event == ButtonEvent::EVENT_RELEASED)
     {
         // HAL::Buzz_Tone(700, 20);
         // EncoderDiffDisable = false;
+        ;
     }
     else if (event == ButtonEvent::EVENT_LONG_PRESSED)
     {
         // HAL::Audio_PlayMusic("Shutdown");
         // HAL::Power_Shutdown();
         rgb_flag = 2;
+        ;
     }
     else if (event == ButtonEvent::EVENT_DOUBLE_CLICKED)
     {
         rgb_flag = 0;
+        ;
     }
 }
 

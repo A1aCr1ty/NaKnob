@@ -5,18 +5,30 @@
 
 #include "../Page.h"
 
+// 控制画面跳转
 enum PLAYGROUND_MODE
 {
-    PLAYGROUND_MODE_UNBOUND = MOTOR_UNBOUND_NO_DETENTS,
+    PLAYGROUND_MODE_FINE_DETENTS = MOTOR_UNBOUND_FINE_DETENTS,
     PLAYGROUND_MODE_BOUND = MOTOR_BOUND_0_12_NO_DETENTS,
-    PLAYGROUND_MODE_MULTI_RCV = MOTOR_COARSE_DETENTS,
+    PLAYGROUND_MODE_ON_OFF = MOTOR_ON_OFF_STRONG_DETENTS,
+    PLAYGROUND_MODE_MAX,
 };
+
+
+enum APP_MODE{
+    APP_MODE_MIN = PLAYGROUND_MODE_MAX,
+    APP_MODE_SUPER_DIAL = APP_MODE_MIN + MOTOR_UNBOUND_FINE_DETENTS,
+    APP_MODE_MAX,
+};
+
+
 
 typedef struct
 {
-    int32_t xkonb_value;
+    int32_t xknob_value;
     int32_t motor_pos;
     int32_t angle_offset;
+    int32_t knob_direction;
 } PlaygroundMotorInfo;
 
 namespace Page
@@ -26,6 +38,7 @@ namespace Page
     {
     public:
         void Create(lv_obj_t *root);
+        void Delete();
         void UpdateView(PlaygroundMotorInfo *info);
         void SetPlaygroundMode(int16_t mode);
         int16_t playgroundMode;
@@ -50,8 +63,9 @@ namespace Page
         } style;
 
     private:
-        void CreateBoundView(void);
-        void BoundView(void);
+        void OnOffView(void);
+        void BoundZeroView(void);
+        void UpdateBackgroundView(PlaygroundMotorInfo *info);
     };
 
 }

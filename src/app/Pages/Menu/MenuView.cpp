@@ -37,7 +37,7 @@ void MenuView::Create(lv_obj_t *root)
     Item_Create(
         &ui.switches,
         root,
-        "play",
+        "Play",
         "switches",
 
         "Playground\n"
@@ -45,14 +45,16 @@ void MenuView::Create(lv_obj_t *root)
         "On/off\n"
         "Return-to-center\n"
         "Fine values\n"
-        "Coarse values\n");
+        "Coarse values\n"
+
+    );
 
     // /* Item System */
     Item_Create(
         &ui.system,
         root,
-        "System",      // name
-        "system_info", // img_src
+        "System",
+        "system_info",
 
         "Firmware\n"
         "Author\n"
@@ -109,7 +111,6 @@ void MenuView::Create(lv_obj_t *root)
 void MenuView::Group_Init()
 {
     ui.group = lv_group_create();
-    // 绑定onFocus函数
     lv_group_set_focus_cb(ui.group, onFocus);
     lv_indev_set_group(lv_get_indev(LV_INDEV_TYPE_ENCODER), ui.group);
 
@@ -134,7 +135,6 @@ void MenuView::SetScrollToY(lv_obj_t *obj, lv_coord_t y, lv_anim_enable_t en)
     lv_coord_t scroll_y = lv_obj_get_scroll_y(obj);
     lv_coord_t diff = -y + scroll_y;
 
-    // 使obj菜单上下滚动
     lv_obj_scroll_by(obj, 0, diff, en);
 }
 

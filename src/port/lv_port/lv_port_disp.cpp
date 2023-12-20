@@ -46,7 +46,7 @@ void lv_port_disp_init(SCREEN_CLASS* scr) {
     //     LV_LOG_WARN("LVGL disp_draw_buf allocate failed!");
     // }
     lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, DISP_BUF_SIZE);
-
+    
     /* Initialize the display */
     lv_disp_drv_init(&disp_drv);
     disp_drv.hor_res = screenWidth;

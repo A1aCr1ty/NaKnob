@@ -14,26 +14,39 @@ void Page::PlaygroundView::SetPlaygroundMode(int16_t mode)
 	playgroundMode = mode;
 	switch (playgroundMode)
 	{
-	case PLAYGROUND_MODE_UNBOUND:
+	case PLAYGROUND_MODE_FINE_DETENTS:
 		// This mode is default
 		break;
 	case PLAYGROUND_MODE_BOUND:
 		MIN_VALUE = 0;
 		MAX_VALUE = 12;
-		BoundView();
+		SCALE_LEFT_BOUND_TICKS = 200;
+		SCALE_ANGLE_RANGE = 140;
+		SCALE_RIGHT_BOUND_TICKS = SCALE_LEFT_BOUND_TICKS + SCALE_ANGLE_RANGE;
+		BoundZeroView();
 		break;
+	case PLAYGROUND_MODE_ON_OFF:
+		MIN_VALUE = 0;
+		MAX_VALUE = 1;
+		SCALE_LEFT_BOUND_TICKS = 240;
+		SCALE_ANGLE_RANGE = 60;
+		OnOffView();
 	default:
 		break;
 	}
 }
 
-void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
-
+inline void PlaygroundView::UpdateBackgroundView(PlaygroundMotorInfo *info)
 {
-	lv_label_set_text_fmt(
-		ui.lable_value,
-		"%d",
-		info->xkonb_value);
+	int value_map = map(info->xknob_value, 0, MAX_VALUE, 0, 255);
+	lv_obj_set_style_bg_main_stop(ui.meter, 255 - value_map, 0);
+	lv_obj_set_style_bg_grad_stop(ui.meter, 255 - value_map, 0);
+}
+
+void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
+{
+	int _value = 0;
+
 	int32_t motor_pos = info->motor_pos;
 	motor_pos = motor_pos % 360;
 	if (motor_pos < 0)
@@ -41,21 +54,22 @@ void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
 		motor_pos = 360 + motor_pos;
 	}
 	lv_meter_set_indicator_value(ui.meter, ui.nd_img_circle, motor_pos);
-	// lv_style_set_bg_main_stop(&style.meter, 255-xkonb_value);
-	// lv_style_set_bg_grad_stop(&style.meter, 255-xkonb_value);
-	int value_map = map(info->xkonb_value, 0, MAX_VALUE, 0, 255);
-	lv_obj_set_style_bg_main_stop(ui.meter, 255 - value_map, 0);
-	lv_obj_set_style_bg_grad_stop(ui.meter, 255 - value_map, 0);
+	// lv_style_set_bg_main_stop(&style.meter, 255-xknob_value);
+	// lv_style_set_bg_grad_stop(&style.meter, 255-xknob_value);
 
 	switch (playgroundMode)
 	{
-	case PLAYGROUND_MODE_UNBOUND:
+	case PLAYGROUND_MODE_FINE_DETENTS:
 		// This mode is default
+		_value = info->motor_pos;
+		UpdateBackgroundView(info);
 		break;
 	case PLAYGROUND_MODE_BOUND:
+		_value = info->xknob_value;
+		UpdateBackgroundView(info);
 		if (info->angle_offset != 0)
 		{
-			if (info->xkonb_value == MIN_VALUE)
+			if (info->xknob_value == MIN_VALUE)
 			{
 				lv_meter_set_indicator_start_value(ui.meter, ui.arc, SCALE_LEFT_BOUND_TICKS - ARC_START_ROTATION - info->angle_offset);
 				lv_meter_set_indicator_end_value(ui.meter, ui.arc, SCALE_LEFT_BOUND_TICKS - ARC_START_ROTATION);
@@ -71,17 +85,27 @@ void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
 			lv_meter_set_indicator_start_value(ui.meter, ui.arc, 0);
 			lv_meter_set_indicator_end_value(ui.meter, ui.arc, 0);
 		}
-
+		break;
+	case PLAYGROUND_MODE_ON_OFF:
+		_value = info->xknob_value;
+		UpdateBackgroundView(info);
 		break;
 	default:
 		break;
 	}
+	lv_label_set_text_fmt(
+		ui.lable_value,
+		"%d",
+		_value);
 }
 
-void PlaygroundView::CreateBoundView(void)
+void PlaygroundView::OnOffView(void)
 {
+	lv_meter_set_scale_ticks(ui.meter, ui.scale_pot, 3, 2, 0, lv_color_make(0xff, 0xff, 0xff));
+	lv_meter_set_scale_major_ticks(ui.meter, ui.scale_pot, 2, 4, 20, lv_color_make(0xff, 0xff, 0xff), 10);
+	lv_meter_set_scale_range(ui.meter, ui.scale_pot, 0, 1, SCALE_ANGLE_RANGE, SCALE_LEFT_BOUND_TICKS);
 }
-void PlaygroundView::BoundView(void)
+void PlaygroundView::BoundZeroView(void)
 {
 	lv_meter_set_scale_ticks(ui.meter, ui.scale_pot, 13, 2, 0, lv_color_make(0xff, 0xff, 0xff));
 	lv_meter_set_scale_major_ticks(ui.meter, ui.scale_pot, 12, 4, 20, lv_color_make(0xff, 0xff, 0xff), 10);
@@ -92,6 +116,12 @@ void PlaygroundView::BoundView(void)
 	lv_meter_set_scale_range(ui.meter, ui.scale_arc, 0, 360, 360, ARC_START_ROTATION);
 	lv_meter_set_indicator_start_value(ui.meter, ui.arc, 0);
 	lv_meter_set_indicator_end_value(ui.meter, ui.arc, 0);
+}
+void PlaygroundView::Delete()
+{
+	lv_group_del(ui.group);
+	lv_style_reset(&style.meter);
+	lv_style_reset(&style.ticks);
 }
 
 void PlaygroundView::Create(lv_obj_t *root)

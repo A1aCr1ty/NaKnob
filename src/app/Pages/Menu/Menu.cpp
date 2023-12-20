@@ -36,7 +36,7 @@ void Menu::onViewDidLoad()
 void Menu::onViewWillAppear()
 {
     lv_indev_set_group(lv_get_indev(LV_INDEV_TYPE_ENCODER), View.ui.group);
-    //StatusBar::SetStyle(StatusBar::STYLE_BLACK);
+    // StatusBar::SetStyle(StatusBar::STYLE_BLACK);
 
     timer = lv_timer_create(onTimerUpdate, 100, this);
     lv_timer_ready(timer);
@@ -116,13 +116,16 @@ void Menu::onTimerUpdate(lv_timer_t *timer)
 
 void Menu::onEvent(lv_event_t *event)
 {
+    // 获得触发事件的对象
     lv_obj_t *obj = lv_event_get_target(event);
+    // 获得触发事件的代码
     lv_event_code_t code = lv_event_get_code(event);
+    // 获得该对象的实例
     auto *instance = (Menu *)lv_obj_get_user_data(obj);
 
     if (code == LV_EVENT_PRESSED)
     {
-        instance->Model.ChangeMotorMode(MOTOR_FINE_DETENTS);
+        //instance->Model.ChangeMotorMode(MOTOR_FINE_NO_DETENTS);
         instance->Manager->Push("Pages/Playground");
     }
 }

@@ -56,6 +56,7 @@ namespace Page
             const char *bulidTime);
 
         void SetScrollToY(lv_obj_t *obj, lv_coord_t y, lv_anim_enable_t en);
+       // void SetScrollToX(lv_obj_t *obj, lv_coord_t x, lv_anim_enable_t en);
         static void onFocus(lv_group_t *e);
 
     private:
