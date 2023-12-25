@@ -9,6 +9,7 @@
 typedef enum
 {
     SUPER_DIAL_LEFT = -1,
+    SUPER_DIAL_NULL = 0,
     SUPER_DIAL_RIGHT = 1,
 } SuperDialMotion;
 namespace HAL
@@ -28,7 +29,8 @@ namespace HAL
     void motor_shake(int strength, int delay_time);
     void super_dial_init(void);
     void super_dial_update(SuperDialMotion direction);
-
+    void suer_dial_release(void);
+    void suer_dial_press(void);
 }
 
 #endif

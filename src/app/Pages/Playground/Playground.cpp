@@ -102,7 +102,10 @@ void Playground::Update()
 	int32_t xknob_value = 2;
 	PlaygroundMotorInfo info;
 	Model.GetKnobStatus(&info);
-	// Serial.printf("xknob_value %d, pos: %d\n", xknob_value, pos);
+	if (app == APP_MODE_SUPER_DIAL && info.knob_direction != SUPER_DIAL_NULL)
+	{
+		HAL::super_dial_update(info.knob_direction);
+	}
 	View.UpdatePlaygroundView(&info);
 }
 
@@ -145,5 +148,18 @@ void Playground::onEvent(lv_event_t *event)
 		//Serial.printf("Playground: LV_EVENT_LONG_PRESSED\n");
 		instance->Model.ChangeMotorMode(MOTOR_UNBOUND_COARSE_DETENTS);
 		instance->Manager->Pop();
+	}else if(code == LV_EVENT_SHORT_CLICKED){
+		if(app == APP_MODE_SUPER_DIAL){
+			HAL::suer_dial_press();
+		}
+	}else if(code == LV_EVENT_LONG_PRESSED_REPEAT){
+		// return to menu
+		instance->Model.ChangeMotorMode(MOTOR_UNBOUND_COARSE_DETENTS);
+		instance->Manager->Pop();
+	}else if (code == LV_EVENT_RELEASED) {
+		if (app == APP_MODE_SUPER_DIAL) {
+			// Serial.printf("Playground: realse\n");
+			HAL::suer_dial_release();
+		}
 	}
 }

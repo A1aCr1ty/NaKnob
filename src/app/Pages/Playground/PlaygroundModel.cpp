@@ -11,7 +11,7 @@ static int last_pos = 0;
 static int32_t MAX_VALUE = 100;
 static int32_t MIN_VALUE = 0;
 static bool is_outbound = false;
-static int knob_direction = 0;
+static SuperDialMotion knob_direction = SUPER_DIAL_NULL;
 static int32_t arc_offset = 0; // 超过界限以后，显示arch长度
 
 void PlaygroundModel::GetKnobStatus(PlaygroundMotorInfo *info)
@@ -20,12 +20,13 @@ void PlaygroundModel::GetKnobStatus(PlaygroundMotorInfo *info)
     info->motor_pos = now_pos;
     info->angle_offset = arc_offset;
     info->knob_direction = knob_direction;
+    knob_direction = SUPER_DIAL_NULL;
 }
 
 void PlaygroundModel::SetPlaygroundMode(int16_t mode)
 {
     playgroundMode = mode;
-    ChangeMotorMode(playgroundMode);
+    //ChangeMotorMode(playgroundMode);
     knob_value = 0;
     switch (playgroundMode)
     {
@@ -68,7 +69,7 @@ static int onEvent(Account *account, Account::EventParam_t *param)
 
     now_pos = info->position;
     is_outbound = info->is_outbound;
-
+    knob_direction = SUPER_DIAL_NULL;
     if (is_outbound)
     {
         arc_offset = (int)(info->angle_offset);

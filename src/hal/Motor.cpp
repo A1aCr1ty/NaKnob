@@ -318,15 +318,15 @@ void HAL::motor_init(void)
     // motor.controller = MotionControlType::torque;
     // update_motor_status(MOTOR_INIT_END);
 
-    motor.useMonitoring(Serial);
-    motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
+    // motor.useMonitoring(Serial);
+    // motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
     // downsampling
-    motor.monitor_downsample = 100; // default 10
+    // motor.monitor_downsample = 100; // default 10
 
     actMotorStatus = new Account("MotorStatus", AccountSystem::Broker(), sizeof(MotorStatusInfo), nullptr);
 
-    commander.add('C', onPid, "PID vel");
-    commander.add('M', onMotor, "my motor");
+    // commander.add('C', onPid, "PID vel");
+    // commander.add('M', onMotor, "my motor");
     xTaskCreatePinnedToCore(
         TaskMotorUpdate,
         "MotorThread",

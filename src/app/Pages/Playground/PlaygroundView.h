@@ -13,7 +13,7 @@ typedef struct
     int32_t xknob_value;
     int32_t motor_pos;
     int32_t angle_offset;
-    int32_t knob_direction;
+    SuperDialMotion knob_direction;
 } PlaygroundMotorInfo;
 
 namespace Page
@@ -38,7 +38,7 @@ namespace Page
             lv_meter_scale_t *scale_arc; // arc 的刻度
             lv_meter_indicator_t *arc;
             lv_group_t *group;
-
+            lv_obj_t *img_super_dial;
         } ui;
 
         struct
