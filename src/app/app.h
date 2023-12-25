@@ -1,5 +1,6 @@
 #ifndef __APP_H__
 #define __APP_H__
+#include "hal/motor.h"
 
 #define ACCOUNT_SEND_NOTIFY_CMD(ACT, CMD)                                         \
     do                                                                            \
@@ -25,6 +26,20 @@
     } while (0)
 
 #endif
+
+enum PLAYGROUND_MODE
+{
+    PLAYGROUND_MODE_FINE_DETENTS,
+    PLAYGROUND_MODE_BOUND,
+    PLAYGROUND_MODE_ON_OFF,
+    PLAYGROUND_MODE_MAX,
+};
+
+enum APP_MODE
+{
+    APP_MODE_SUPER_DIAL = PLAYGROUND_MODE_MAX,
+    APP_MODE_MAX,
+};
 
 void display_init();
 

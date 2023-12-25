@@ -31,6 +31,8 @@ void Page::PlaygroundView::SetPlaygroundMode(int16_t mode)
 		SCALE_LEFT_BOUND_TICKS = 240;
 		SCALE_ANGLE_RANGE = 60;
 		OnOffView();
+	case APP_MODE_SUPER_DIAL:
+		SuperDialView();
 	default:
 		break;
 	}
@@ -43,7 +45,7 @@ inline void PlaygroundView::UpdateBackgroundView(PlaygroundMotorInfo *info)
 	lv_obj_set_style_bg_grad_stop(ui.meter, 255 - value_map, 0);
 }
 
-void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
+void Page::PlaygroundView::UpdatePlaygroundView(PlaygroundMotorInfo *info)
 {
 	int _value = 0;
 
@@ -90,6 +92,8 @@ void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
 		_value = info->xknob_value;
 		UpdateBackgroundView(info);
 		break;
+	case APP_MODE_SUPER_DIAL:
+		break;
 	default:
 		break;
 	}
@@ -97,6 +101,11 @@ void Page::PlaygroundView::UpdateView(PlaygroundMotorInfo *info)
 		ui.lable_value,
 		"%d",
 		_value);
+}
+
+void PlaygroundView::SuperDialView(void)
+{
+	lv_obj_add_flag(ui.lable_value, LV_OBJ_FLAG_HIDDEN);
 }
 
 void PlaygroundView::OnOffView(void)

@@ -1,5 +1,5 @@
-#ifndef __PLAYGROUND_PRESENTER_H
-#define __PLAYGROUND_PRESENTER_H
+#ifndef __PLAGROUND_PRESENTER_H
+#define __PLAGROUND_PRESENTER_H
 
 #include "PlaygroundView.h"
 #include "PlaygroundModel.h"
@@ -39,7 +39,7 @@ namespace Page
         PlaygroundView View;
         PlaygroundModel Model;
         lv_timer_t *timer;
-};
+    };
 
 }
 

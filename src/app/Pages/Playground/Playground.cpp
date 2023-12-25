@@ -2,6 +2,28 @@
 #include <Arduino.h>
 using namespace Page;
 
+typedef struct
+{
+	MOTOR_RUNNING_MODE_E motor_mode;
+} app_mode_config_t;
+
+app_mode_config_t app_config[] = {
+	[PLAYGROUND_MODE_FINE_DETENTS] = {
+		.motor_mode = MOTOR_UNBOUND_FINE_DETENTS,
+	},
+	[PLAYGROUND_MODE_BOUND] = {
+		.motor_mode = MOTOR_BOUND_0_12_NO_DETENTS,
+	},
+	[PLAYGROUND_MODE_ON_OFF] = {
+		.motor_mode = MOTOR_ON_OFF_STRONG_DETENTS,
+	},
+	[APP_MODE_SUPER_DIAL] = {
+		.motor_mode = MOTOR_UNBOUND_FINE_DETENTS,
+	},
+};
+
+int16_t app = 0;
+
 Playground::Playground()
 {
 }
@@ -18,6 +40,7 @@ void Playground::onCustomAttrConfig()
 
 void Playground::onViewLoad()
 {
+
 	Model.Init();
 	View.Create(root);
 
@@ -33,11 +56,17 @@ void Playground::onViewDidLoad()
 
 void Playground::onViewWillAppear()
 {
-
+	app = PLAYGROUND_MODE_FINE_DETENTS; // default
+	if (priv.Stash.ptr)
+	{
+		app = *((int16_t *)priv.Stash.ptr);
+		//Serial.printf("Playground: app = %d\n", app);
+	}
 	// lv_obj_set_style_bg_color(root, lv_color_white(), LV_PART_MAIN);
-	Model.ChangeMotorMode(PLAYGROUND_MODE_FINE_DETENTS);
-	Model.SetPlaygroundMode(PLAYGROUND_MODE_FINE_DETENTS);
-	View.SetPlaygroundMode(PLAYGROUND_MODE_FINE_DETENTS);
+
+	Model.ChangeMotorMode(app_config[app].motor_mode);
+	Model.SetPlaygroundMode(app);
+	View.SetPlaygroundMode(app);
 
 	timer = lv_timer_create(onTimerUpdate, 10, this);
 }
@@ -74,7 +103,7 @@ void Playground::Update()
 	PlaygroundMotorInfo info;
 	Model.GetKnobStatus(&info);
 	// Serial.printf("xknob_value %d, pos: %d\n", xknob_value, pos);
-	View.UpdateView(&info);
+	View.UpdatePlaygroundView(&info);
 }
 
 void Playground::onTimerUpdate(lv_timer_t *timer)
@@ -92,36 +121,28 @@ void Playground::onEvent(lv_event_t *event)
 
 	if (code == LV_EVENT_PRESSED)
 	{
-		int next_mod = 0;
-		switch (instance->Model.playgroundMode)
+		if (app < PLAYGROUND_MODE_MAX)
 		{
-		case PLAYGROUND_MODE_FINE_DETENTS:
-			next_mod = PLAYGROUND_MODE_BOUND;
-			break;
-		case PLAYGROUND_MODE_BOUND:
-			next_mod = PLAYGROUND_MODE_ON_OFF;
-			break;
-		case PLAYGROUND_MODE_ON_OFF:
-			next_mod = PLAYGROUND_MODE_MAX; // END
-			break;
-		default:
-			break;
-		}
+			int app = instance->Model.playgroundMode + 1;
 
-		if (next_mod != PLAYGROUND_MODE_MAX)
-		{
-			instance->Model.ChangeMotorMode(next_mod);
-			instance->Model.SetPlaygroundMode(next_mod);
-			instance->View.SetPlaygroundMode(next_mod);
-		}
-		else
-		{
-			instance->Model.ChangeMotorMode(MOTOR_UNBOUND_COARSE_DETENTS);
-			instance->Manager->Pop();
+			if (app != PLAYGROUND_MODE_MAX)
+			{
+				instance->Model.ChangeMotorMode(app_config[app].motor_mode);
+				instance->Model.SetPlaygroundMode(app);
+				instance->View.SetPlaygroundMode(app);
+			}
+			else
+			{
+				// return to memu
+				instance->Model.ChangeMotorMode(MOTOR_UNBOUND_COARSE_DETENTS);
+				instance->Manager->Pop();
+			}
 		}
 	}
 	else if (code == LV_EVENT_LONG_PRESSED)
 	{
+		// return to memu
+		//Serial.printf("Playground: LV_EVENT_LONG_PRESSED\n");
 		instance->Model.ChangeMotorMode(MOTOR_UNBOUND_COARSE_DETENTS);
 		instance->Manager->Pop();
 	}
