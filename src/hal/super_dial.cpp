@@ -37,3 +37,7 @@ void HAL::super_dial_update(SuperDialMotion direction)
         }
     }
 }
+
+bool HAL::super_dial_is_connected(){
+    return bleKeyboard.isConnected();
+}

@@ -26,7 +26,9 @@ namespace Page
         void Delete();
         void UpdatePlaygroundView(PlaygroundMotorInfo *info);
         void SetPlaygroundMode(int16_t mode);
+        void UpdateSuperDialView(bool isConnected);
         int16_t playgroundMode;
+        
 
     public:
         struct
