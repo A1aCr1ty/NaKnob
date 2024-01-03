@@ -30,6 +30,8 @@ void PlaygroundModel::SetPlaygroundMode(int16_t mode)
     knob_value = 0;
     switch (playgroundMode)
     {
+    case PLAYGROUND_MODE_NO_EFFECTS:
+        break;
     case PLAYGROUND_MODE_FINE_DETENTS:
         // This mode is default
         MAX_VALUE = 100;

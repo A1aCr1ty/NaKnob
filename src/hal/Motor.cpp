@@ -31,7 +31,7 @@ static XKnobConfig x_knob_configs[] = {
         "Fine values\nWith detents", // 任意运动的控制  有阻尼 类似于机械旋钮
     },
     [MOTOR_UNBOUND_NO_DETENTS] = {
-        0, 0, 10 * PI / 180, 0, 0.1, 1.1,
+        0, 0, 1 * PI / 180, 0, 0.1, 1.1,
         "Unbounded\nNo detents", // 无限制  不制动
     },
     [MOTOR_UNBOUND_COARSE_DETENTS] = {.num_positions = 0, .position = 0, .position_width_radians = 8.225806452 * _PI / 180, .detent_strength_unit = 2.3, .endstop_strength_unit = 1, .snap_point = 1.1, "Fine values\nWith detents\nUnbound"},

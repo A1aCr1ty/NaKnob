@@ -14,6 +14,8 @@ void Page::PlaygroundView::SetPlaygroundMode(int16_t mode)
 	playgroundMode = mode;
 	switch (playgroundMode)
 	{
+	case PLAYGROUND_MODE_NO_EFFECTS:
+		break;
 	case PLAYGROUND_MODE_FINE_DETENTS:
 		// This mode is default
 		break;
@@ -61,6 +63,8 @@ void Page::PlaygroundView::UpdatePlaygroundView(PlaygroundMotorInfo *info)
 
 	switch (playgroundMode)
 	{
+	case PLAYGROUND_MODE_NO_EFFECTS:
+		break;
 	case PLAYGROUND_MODE_FINE_DETENTS:
 		// This mode is default
 		_value = info->motor_pos;
